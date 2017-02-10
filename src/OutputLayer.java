@@ -6,8 +6,8 @@ public class OutputLayer extends Layer {
     Vector label;
     Vector finalOutput;
 
-    public OutputLayer(Vector label, Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
-        this.label = label;
+    public OutputLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
+        this.label = null;
         this.finalOutput = null;
 
         this.prevLayer = prev;
@@ -63,6 +63,18 @@ public class OutputLayer extends Layer {
                 break;
             }
         }
+    }
+
+    public void feedLabel(Vector label) {
+        if (this.output_size != label.dimension) {
+            System.err.println("Feeding label error! Dimensions must be the same");
+            System.exit(1);
+        }
+        this.label = label;
+    }
+
+    public boolean isCorrect() {
+        return this.label.equals(this.finalOutput);
     }
 
     @Override

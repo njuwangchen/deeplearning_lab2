@@ -178,6 +178,7 @@ public class Matrix {
         return result;
     }
 
+    @Override
     public String toString() {
         String ret = "";
         ret += ("X Dimension: "+x_dimension+", Y Dimension: "+y_dimension+"\n");
@@ -190,6 +191,28 @@ public class Matrix {
         return ret;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Matrix) {
+            Matrix A = this;
+            Matrix B = (Matrix)object;
+
+            if (A.x_dimension != B.x_dimension || A.y_dimension != B.y_dimension) {
+                return false;
+            } else {
+                for (int i=0; i<A.x_dimension; ++i) {
+                    for (int j=0; j<A.y_dimension; ++j) {
+                        if (A.data[i][j] != B.data[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
 
     public static void main(String[] args) {
         Matrix A = new Matrix(9,8,2);
