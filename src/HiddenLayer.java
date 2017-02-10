@@ -1,20 +1,13 @@
 /**
- * Created by chenwang on 2/9/17.
+ * Created by chenwang on 2/10/17.
  */
-public class OutputLayer extends Layer {
+public class HiddenLayer extends Layer {
 
-    Vector label;
-    Vector finalOutput;
-
-    public OutputLayer(Vector label, Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
-        this.label = label;
-        this.finalOutput = null;
-
+    public HiddenLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
         this.prevLayer = prev;
         this.prevLayer.nextLayer = this;
         this.nextLayer = null;
 
-        // because we want to use bias, so we would like to plus 1 here
         this.input_size = this.prevLayer.output_size + 1;
         this.output_size = output_size;
 
@@ -53,31 +46,31 @@ public class OutputLayer extends Layer {
         }
     }
 
-    public void calOutput() {
-        this.finalOutput = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
-        double maxVal = this.activationOutput.findMax();
-
-        for (int i=0; i<this.output_size; ++i) {
-            if (maxVal == this.activationOutput.data[i][0]) {
-                this.finalOutput.data[i][0] = 1.0;
-                break;
-            }
-        }
-    }
-
     @Override
     public void back() {
-        this.gradMat = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
+        Matrix sumMat = this.nextLayer.weightMat
+                .matElementWiseMul(this.nextLayer.gradMat);
+        Vector sumVec = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
+        for (int i=0; i<sumMat.x_dimension; ++i) {
+            double sum = 0.0;
+            for (int j=0; j<sumMat.y_dimension; ++j) {
+                sum += sumMat.data[i][j];
+            }
+            sumVec.data[i][0] = sum;
+        }
 
-        if (this.ACT_FLAG == Layer.ACT_SIGMOID) {
-            Vector one_v = new Vector(this.output_size, Matrix.INITIALIZE_ONE);
-            this.gradMat = (this.label.matSub(this.finalOutput))
-                    .matElementWiseMul(this.finalOutput)
-                    .matElementWiseMul(one_v.matSub(this.finalOutput));
-            this.gradMat = this.gradMat.toVector().extendHerizontallyToMat(this.input_size);
-            // transpose to an m*n matrix
+        if (this.ACT_FLAG == Layer.ACT_RELU) {
+            Vector gradVec = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
+            for (int i=0; i<this.output_size; ++i) {
+                if (this.activationOutput.data[i][0] > 0) {
+                    gradVec.data[i][0] = 1;
+                }
+            }
+
+            Vector mulVec = gradVec.matElementWiseMul(sumVec).toVector();
+            this.gradMat = mulVec.extendHerizontallyToMat(this.input_size);
             this.gradMat = this.gradMat.transpose();
-        } else if (this.ACT_FLAG == Layer.ACT_RELU) {
+        } else if (this.ACT_FLAG == Layer.ACT_SIGMOID) {
             // TODO
 
         } else if (this.ACT_FLAG == Layer.ACT_LINEAR) {
