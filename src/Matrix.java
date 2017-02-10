@@ -129,6 +129,26 @@ public class Matrix {
         return result;
     }
 
+    public Vector toVector() {
+        if (this.x_dimension != 1 && this.y_dimension != 1) {
+            System.err.println("You cannot cast this matrix to a vector");
+            System.exit(1);
+        }
+        int dimension = this.x_dimension >= this.y_dimension ? this.x_dimension : this.y_dimension;
+
+        Vector result = new Vector(dimension, Matrix.INITIALIZE_ZERO);
+
+        int ind = 0;
+        for (int i=0; i<this.x_dimension; ++i) {
+            for (int j=0; j<this.y_dimension; ++j) {
+                result.data[ind][0] = this.data[i][j];
+                ++ind;
+            }
+        }
+
+        return result;
+    }
+
     public String toString() {
         String ret = "";
         ret += ("X Dimension: "+x_dimension+", Y Dimension: "+y_dimension+"\n");

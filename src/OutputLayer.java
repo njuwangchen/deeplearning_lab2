@@ -27,11 +27,15 @@ public class OutputLayer extends Layer {
 
     @Override
     public void forward() {
+        Vector input = prevLayer.activationOutput.addBias();
+        input = input.transpose().toVector();
 
+        this.weightedSum = input.matMul(this.weightMat).toVector();
     }
 
     @Override
     public void activate() {
+
 
     }
 
