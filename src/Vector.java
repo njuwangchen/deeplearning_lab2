@@ -32,4 +32,16 @@ public class Vector extends Matrix {
         return result;
     }
 
+    public Matrix extendHerizontallyToMat(int col_size) {
+        Matrix result = new Matrix(this.dimension, col_size, Matrix.INITIALIZE_ZERO);
+
+        for (int i=0; i<result.x_dimension; ++i) {
+            for (int j=0; j<result.y_dimension; ++j) {
+                result.data[i][j] = this.data[i][0];
+            }
+        }
+
+        return result;
+    }
+
 }

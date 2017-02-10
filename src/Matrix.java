@@ -60,11 +60,30 @@ public class Matrix {
         return result;
     }
 
+    public Matrix matAdd(Matrix B) {
+
+        Matrix A = this;
+        if (A.x_dimension != B.x_dimension || A.y_dimension != B.y_dimension) {
+            System.err.println("Mat Add Dimension Error");
+            System.exit(1);
+        }
+
+        Matrix result = new Matrix(A.x_dimension, A.y_dimension, 0);
+
+        for (int i=0; i<A.x_dimension; ++i) {
+            for (int j=0; j<A.y_dimension; ++j) {
+                result.data[i][j] = A.data[i][j] + B.data[i][j];
+            }
+        }
+
+        return result;
+    }
+
     public Matrix matSub(Matrix B) {
 
         Matrix A = this;
         if (A.x_dimension != B.x_dimension || A.y_dimension != B.y_dimension) {
-            System.err.println("Mat Mul Dimension Error");
+            System.err.println("Mat Sub Dimension Error");
             System.exit(1);
         }
 
@@ -84,7 +103,7 @@ public class Matrix {
         Matrix A = this;
 
         if (A.x_dimension != B.x_dimension || A.y_dimension != B.y_dimension) {
-            System.err.println("Mat Mul Dimension Error");
+            System.err.println("Mat Element-wise Mul Dimension Error");
             System.exit(1);
         }
 
@@ -127,6 +146,16 @@ public class Matrix {
         }
 
         return result;
+    }
+
+    public double findMax() {
+        double max = Double.MIN_VALUE;
+        for (int i=0; i<this.x_dimension; ++i) {
+            for (int j=0; j<this.y_dimension; ++j) {
+                max = Math.max(max, this.data[i][j]);
+            }
+        }
+        return max;
     }
 
     public Vector toVector() {
