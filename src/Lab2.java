@@ -7,8 +7,8 @@ public class Lab2 {
         DataParser dp = new DataParser();
         dp.parseFile("data/protein-secondary-structure.txt");
 
-        NeuralNet neuralNet = new NeuralNet(dp.data_feature_size, dp.data_label_size, 1, new int[]{10},
-                Layer.ACT_RELU, Layer.ACT_SIGMOID, 0.1, dp.trainingSet, dp.tuningSet, dp.testingSet);
+        NeuralNet neuralNet = new NeuralNet(dp.data_feature_size, dp.data_label_size, 1, new int[]{20},
+                Layer.ACT_RELU, Layer.ACT_SIGMOID, 0.01, dp.trainingSet, dp.tuningSet, dp.testingSet);
 
         for (int i=0; i<20; ++i) {
             double learningAccuracy = neuralNet.trainOneEpoch();

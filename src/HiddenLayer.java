@@ -3,6 +3,8 @@
  */
 public class HiddenLayer extends Layer {
 
+    private final static boolean debug = false;
+
     public HiddenLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
         this.prevLayer = prev;
         this.prevLayer.nextLayer = this;
@@ -23,9 +25,19 @@ public class HiddenLayer extends Layer {
 
     @Override
     public void forward() {
+        if (debug) {
+            System.out.println("Weight of hidden layer");
+            System.out.println(this.weightMat);
+        }
+
         Vector input = prevLayer.activationOutput.addBias();
 
         this.weightedSum = input.transpose().matMul(this.weightMat).toVector();
+
+        if (debug) {
+            System.out.println("Weighted sum of hidden layer");
+            System.out.println(this.weightedSum);
+        }
     }
 
     @Override
@@ -43,6 +55,11 @@ public class HiddenLayer extends Layer {
             for (int i = 0; i<this.activationOutput.dimension; ++i) {
                 this.activationOutput.data[i][0] = this.weightedSum.data[i][0];
             }
+        }
+
+        if (debug) {
+            System.out.println("Activation of hidden layer");
+            System.out.println(this.activationOutput);
         }
     }
 
@@ -79,12 +96,20 @@ public class HiddenLayer extends Layer {
             // TODO
 
         }
+
+        if (debug) {
+            System.out.println("grad mat of hidden layer");
+            System.out.println(this.gradMat);
+        }
     }
 
     @Override
     public void adjustWeights() {
         Matrix delta = this.dw();
-        // System.out.println(delta);
+        if (debug) {
+            System.out.println("dw of hidden layer");
+            System.out.println(delta);
+        }
         this.weightMat = this.weightMat.matAdd(delta);
     }
 

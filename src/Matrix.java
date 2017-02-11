@@ -19,7 +19,7 @@ public class Matrix {
 
         data = new double[x_dimension][y_dimension];
 
-        if (INITIALIZE_FLAG == 1) {
+        if (INITIALIZE_FLAG == this.INITIALIZE_ONE) {
             for (int i=0; i<x_dimension; ++i) {
                 for (int j=0; j<y_dimension; ++j) {
                     data[i][j] = 1.0;
@@ -27,7 +27,7 @@ public class Matrix {
             }
         }
 
-        if (INITIALIZE_FLAG == 2) {
+        if (INITIALIZE_FLAG == this.INITIALIZE_RANDOM) {
             Random r = new Random();
             for (int i=0; i<x_dimension; ++i) {
                 for (int j=0; j<y_dimension; ++j) {

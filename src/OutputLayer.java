@@ -3,6 +3,8 @@
  */
 public class OutputLayer extends Layer {
 
+    private final static boolean debug = false;
+
     Vector label;
     Vector finalOutput;
 
@@ -30,9 +32,19 @@ public class OutputLayer extends Layer {
 
     @Override
     public void forward() {
+        if (debug) {
+            System.out.println("Weight of output layer");
+            System.out.println(this.weightMat);
+        }
+
         Vector input = prevLayer.activationOutput.addBias();
 
         this.weightedSum = input.transpose().matMul(this.weightMat).toVector();
+
+        if (debug) {
+            System.out.println("Weighted sum of output layer");
+            System.out.println(this.weightedSum);
+        }
     }
 
     @Override
@@ -51,6 +63,11 @@ public class OutputLayer extends Layer {
                 this.activationOutput.data[i][0] = this.weightedSum.data[i][0];
             }
         }
+
+        if (debug) {
+            System.out.println("activation of output layer");
+            System.out.println(this.activationOutput);
+        }
     }
 
     public void calOutput() {
@@ -62,6 +79,11 @@ public class OutputLayer extends Layer {
                 this.finalOutput.data[i][0] = 1.0;
                 break;
             }
+        }
+
+        if (debug) {
+            System.out.println("final output of output layer");
+            System.out.println(this.finalOutput);
         }
     }
 
@@ -97,11 +119,21 @@ public class OutputLayer extends Layer {
             // TODO
 
         }
+
+        if (debug) {
+            System.out.println("grad mat of output layer");
+            System.out.println(this.gradMat);
+        }
     }
 
     @Override
     public void adjustWeights() {
-        this.weightMat = this.weightMat.matAdd(this.dw());
+        Matrix delta = this.dw();
+        if (debug) {
+            System.out.println("dw of output layer");
+            System.out.println(delta);
+        }
+        this.weightMat = this.weightMat.matAdd(delta);
     }
 
     @Override

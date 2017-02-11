@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by chenwang on 2/10/17.
@@ -42,6 +40,24 @@ public class NeuralNet {
 
     public static void main(String[] args) {
         // write test code here
+        List<Double> features = new ArrayList<Double>();
+        features.add(1.0);
+        features.add(2.0);
+        features.add(3.0);
+        String label = "a";
+        Map<String, Integer> labelMap = new HashMap<String, Integer>();
+        labelMap.put("a", 0);
+        labelMap.put("b", 1);
+
+        Instance instance = new Instance(features, label, labelMap);
+        List<Instance> trainingList = new ArrayList<Instance>();
+        trainingList.add(instance);
+
+        NeuralNet nn = new NeuralNet(3, 2, 1, new int[]{3}, Layer.ACT_RELU, Layer.ACT_SIGMOID,
+                0.1, trainingList, null, null);
+
+        for (int i=0; i<50; ++i)
+            nn.trainOneInstance(instance);
     }
 
     public double trainOneEpoch() {
