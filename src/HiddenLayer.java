@@ -50,8 +50,9 @@ public class HiddenLayer extends Layer {
     public void back() {
         Matrix sumMat = this.nextLayer.weightMat
                 .matElementWiseMul(this.nextLayer.gradMat);
+        // System.out.println(sumMat);
         Vector sumVec = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
-        for (int i=0; i<sumMat.x_dimension; ++i) {
+        for (int i=0; i<sumMat.x_dimension-1; ++i) {
             double sum = 0.0;
             for (int j=0; j<sumMat.y_dimension; ++j) {
                 sum += sumMat.data[i][j];
@@ -69,6 +70,7 @@ public class HiddenLayer extends Layer {
 
             Vector mulVec = gradVec.matElementWiseMul(sumVec).toVector();
             this.gradMat = mulVec.extendHerizontallyToMat(this.input_size);
+            // System.out.println(this.gradMat);
             this.gradMat = this.gradMat.transpose();
         } else if (this.ACT_FLAG == Layer.ACT_SIGMOID) {
             // TODO
@@ -81,13 +83,17 @@ public class HiddenLayer extends Layer {
 
     @Override
     public void adjustWeights() {
-        this.weightMat = this.weightMat.matAdd(this.dw());
+        Matrix delta = this.dw();
+        // System.out.println(delta);
+        this.weightMat = this.weightMat.matAdd(delta);
     }
 
     @Override
     protected Matrix dw() {
         Vector input = prevLayer.activationOutput.addBias();
         Matrix result = new Matrix(this.input_size, this.output_size, Matrix.INITIALIZE_ZERO);
+
+        // System.out.println(this.gradMat);
 
         for (int i=0; i<result.x_dimension; ++i) {
             for (int j=0; j<result.y_dimension; ++j) {

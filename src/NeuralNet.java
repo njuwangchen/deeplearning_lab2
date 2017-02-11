@@ -16,7 +16,7 @@ public class NeuralNet {
     List<Instance> testingSet;
 
     public NeuralNet(int inputLayerSize, int outputLayerSize, int hiddenLayersNum, int[] hiddenLayersSizes,
-                     int ACT_HIDDEN, int ACT_OUTPUT, int learning_rate,
+                     int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate,
                      List<Instance> trainingSet, List<Instance> tuningSet, List<Instance> testingSet) {
         if (hiddenLayersSizes.length != hiddenLayersNum) {
             System.err.println("Hidden Layers Num doesn't match with the number of sizes");
@@ -38,6 +38,10 @@ public class NeuralNet {
         this.trainingSet = trainingSet;
         this.tuningSet = tuningSet;
         this.testingSet = testingSet;
+    }
+
+    public static void main(String[] args) {
+        // write test code here
     }
 
     public double trainOneEpoch() {

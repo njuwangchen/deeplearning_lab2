@@ -83,9 +83,10 @@ public class OutputLayer extends Layer {
 
         if (this.ACT_FLAG == Layer.ACT_SIGMOID) {
             Vector one_v = new Vector(this.output_size, Matrix.INITIALIZE_ONE);
-            this.gradMat = (this.label.matSub(this.finalOutput))
-                    .matElementWiseMul(this.finalOutput)
-                    .matElementWiseMul(one_v.matSub(this.finalOutput));
+            this.gradMat = (this.label.matSub(this.activationOutput))
+                    .matElementWiseMul(this.activationOutput)
+                    .matElementWiseMul(one_v.matSub(this.activationOutput));
+            // System.out.println(this.gradMat);
             this.gradMat = this.gradMat.toVector().extendHerizontallyToMat(this.input_size);
             // transpose to an m*n matrix
             this.gradMat = this.gradMat.transpose();
