@@ -8,10 +8,16 @@ public class Instance {
     Vector feature;
     Vector label;
 
-    public Instance(List<Double> featureList, String labelString, Map<String, Integer> labelMap) {
-        this.feature = new Vector(featureList.size(), Matrix.INITIALIZE_ZERO);
+    public Instance(List<Double> featureList, int feature_value_num,
+                    String labelString, Map<String, Integer> labelMap) {
+
+        this.feature = new Vector(featureList.size() * feature_value_num, Matrix.INITIALIZE_ZERO);
         for (int i=0; i<featureList.size(); ++i) {
-            this.feature.data[i][0] = featureList.get(i);
+            for (int j=0; j<feature_value_num; ++j) {
+                if (featureList.get(i) == j) {
+                    this.feature.data[i * feature_value_num + j][0] = 1;
+                }
+            }
         }
 
         this.label = new Vector(labelMap.size(), Matrix.INITIALIZE_ZERO);

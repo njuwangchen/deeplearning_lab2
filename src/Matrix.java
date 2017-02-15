@@ -213,16 +213,4 @@ public class Matrix {
             return false;
         }
     }
-
-    public static void main(String[] args) {
-        Matrix A = new Matrix(9,8,2);
-        System.out.println(A);
-        Matrix B = new Matrix(8, 2, 1);
-        System.out.println(B.transpose());
-        System.out.println(A.matMul(B));
-        Vector C = new Vector(10,1);
-        System.out.println(C);
-        System.out.println(C.transpose());
-        System.out.println(C.transpose().matMul(C));
-    }
 }

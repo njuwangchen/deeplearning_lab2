@@ -49,7 +49,7 @@ public class NeuralNet {
         labelMap.put("a", 0);
         labelMap.put("b", 1);
 
-        Instance instance = new Instance(features, label, labelMap);
+        Instance instance = new Instance(features, 3, label, labelMap);
         List<Instance> trainingList = new ArrayList<Instance>();
         trainingList.add(instance);
 
@@ -62,6 +62,7 @@ public class NeuralNet {
 
     public double trainOneEpoch() {
         int count = 0;
+        Collections.shuffle(this.trainingSet);
         for (Instance instance: this.trainingSet) {
             if (trainOneInstance(instance)) ++count;
         }
@@ -80,6 +81,11 @@ public class NeuralNet {
         int count = 0;
         for (Instance instance: this.testingSet) {
             if (testOneInstance(instance)) ++count;
+            Vector v = new Vector(3, Matrix.INITIALIZE_ZERO);
+            v.data[0][0] = 1.0;
+            if (!outputLayer.finalOutput.equals(v)) {
+                System.out.println("Not output -");
+            }
         }
         return (double)count/this.testingSet.size();
     }

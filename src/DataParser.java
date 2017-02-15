@@ -15,6 +15,7 @@ public class DataParser {
 
     int data_feature_size;
     int data_label_size;
+    int feature_value_num;
 
     public DataParser() {
         this.instanceList = new ArrayList<Instance>();
@@ -25,6 +26,7 @@ public class DataParser {
 
         this.data_feature_size = 17;
         this.data_label_size = 3;
+        this.feature_value_num = 21;
     }
 
     public static void main(String[] args) {
@@ -96,6 +98,7 @@ public class DataParser {
 
         makeInstanceFromPreviousSequence(aminoAcidMap, labelMap,
                 aminoSequenceInProtein, slidingWindow, labelQueue, countOfProtein);
+
         System.out.println(this.instanceList.size());
         System.out.println(countOfProtein);
         System.out.println(this.trainingSet.size());
@@ -121,7 +124,7 @@ public class DataParser {
 
                     slidingWindow.poll();
 
-                    Instance instance = new Instance(segment, label, labelMap);
+                    Instance instance = new Instance(segment, 21, label, labelMap);
                     this.instanceList.add(instance);
 
                     if (countOfProtein % 6 == 5) {

@@ -91,6 +91,15 @@ public class HiddenLayer extends Layer {
             this.gradMat = this.gradMat.transpose();
         } else if (this.ACT_FLAG == Layer.ACT_SIGMOID) {
             // TODO
+            Vector gradVec = new Vector(this.output_size, Matrix.INITIALIZE_ZERO);
+            for (int i=0; i<this.output_size; ++i) {
+                gradVec.data[i][0] = this.activationOutput.data[i][0] * (1 - this.activationOutput.data[i][0]);
+            }
+
+            Vector mulVec = gradVec.matElementWiseMul(sumVec).toVector();
+            this.gradMat = mulVec.extendHerizontallyToMat(this.input_size);
+
+            this.gradMat = this.gradMat.transpose();
 
         } else if (this.ACT_FLAG == Layer.ACT_LINEAR) {
             // TODO
