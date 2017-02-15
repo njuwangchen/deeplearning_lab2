@@ -37,6 +37,19 @@ public class Matrix {
         }
     }
 
+    public Matrix(Matrix m) {
+        this.x_dimension = m.x_dimension;
+        this.y_dimension = m.y_dimension;
+
+        this.data = new double[this.x_dimension][this.y_dimension];
+
+        for (int i=0; i<this.x_dimension; ++i) {
+            for (int j=0; j<this.y_dimension; ++j) {
+                this.data[i][j] = m.data[i][j];
+            }
+        }
+    }
+
     public Matrix matMul(Matrix B) {
 
         Matrix A = this;

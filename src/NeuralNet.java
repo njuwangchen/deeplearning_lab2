@@ -5,6 +5,8 @@ import java.util.*;
  */
 public class NeuralNet {
 
+    private final static boolean debug = false;
+
     InputLayer inputLayer;
     List<HiddenLayer> hiddenLayers;
     OutputLayer outputLayer;
@@ -83,10 +85,13 @@ public class NeuralNet {
         int count = 0;
         for (Instance instance: this.testingSet) {
             if (testOneInstance(instance)) ++count;
-            Vector v = new Vector(3, Matrix.INITIALIZE_ZERO);
-            v.data[0][0] = 1.0;
-            if (!outputLayer.finalOutput.equals(v)) {
-                System.out.println("Not output -");
+
+            if (debug) {
+                Vector v = new Vector(3, Matrix.INITIALIZE_ZERO);
+                v.data[0][0] = 1.0;
+                if (!outputLayer.finalOutput.equals(v)) {
+                    System.out.println("Not output -");
+                }
             }
         }
         return (double)count/this.testingSet.size();
@@ -103,6 +108,51 @@ public class NeuralNet {
         forwardOneInstance(instance);
         boolean ret = this.outputLayer.isCorrect();
         return ret;
+    }
+
+    public void startTrainingWithEarlyStopping(int stepLimit) {
+        double highestTuningAccuracy = 0.0;
+        double testingAccuracy = 0.0;
+        List<Matrix> bestHiddenWeights = new ArrayList<Matrix>();
+        Matrix bestOutputWeights = null;
+
+        int countOfStep = 0;
+
+        while (true) {
+            if (countOfStep > stepLimit) {
+                //recover
+//                for (int i=0; i<this.hiddenLayers.size(); ++i) {
+//                    HiddenLayer hiddenLayer = this.hiddenLayers.get(i);
+//                    hiddenLayer.weightMat = bestHiddenWeights.get(i);
+//                }
+//                this.outputLayer.weightMat = bestOutputWeights;
+                break;
+            }
+            System.out.println("Training accuracy is " + this.trainOneEpoch());
+
+            double thisTimeAccuracy = this.tuneAccuracy();
+            System.out.println("Tuning accuracy is " + thisTimeAccuracy);
+            System.out.println();
+
+            if (thisTimeAccuracy > highestTuningAccuracy) {
+                for (HiddenLayer hiddenLayer: this.hiddenLayers) {
+                    Matrix weights = new Matrix(hiddenLayer.weightMat);
+                    bestHiddenWeights.add(weights);
+                }
+
+                bestOutputWeights = new Matrix(this.outputLayer.weightMat);
+
+                highestTuningAccuracy = thisTimeAccuracy;
+                testingAccuracy = this.testAccuracy();
+
+                countOfStep = 0;
+            } else {
+                ++countOfStep;
+            }
+        }
+
+        System.out.println("Highest tuning accuracy is " + highestTuningAccuracy);
+        System.out.println("Testing accuracy is " + testingAccuracy);
     }
 
     private void forwardOneInstance(Instance instance) {

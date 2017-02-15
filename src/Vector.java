@@ -9,6 +9,11 @@ public class Vector extends Matrix {
         this.dimension = dimension;
     }
 
+    public Vector(Vector v) {
+        super(v);
+        this.dimension = v.dimension;
+    }
+
     public double getElementAt(int index) {
         if (index >= dimension) {
             System.err.println("Index out of range");

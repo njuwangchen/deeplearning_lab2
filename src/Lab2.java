@@ -10,20 +10,19 @@ public class Lab2 {
         NeuralNet neuralNet = new NeuralNet(dp.data_feature_size * dp.feature_value_num,
                 dp.data_label_size, 1, new int[]{8},
                 Layer.ACT_SIGMOID, Layer.ACT_SIGMOID,
-                0.01, 0.1, dp.trainingSet, dp.tuningSet, dp.testingSet);
+                0.01, 0.9, dp.trainingSet, dp.tuningSet, dp.testingSet);
 
-        for (int i=0; i<100; ++i) {
-            // System.out.println(neuralNet.hiddenLayers.get(0).weightMat);
-            // System.out.println(neuralNet.outputLayer.weightMat);
+//        for (int i=0; i<100; ++i) {
+//            double learningAccuracy = neuralNet.trainOneEpoch();
+//            System.out.println("Learning accuracy: "+learningAccuracy);
+//            double tunningAccuracy = neuralNet.tuneAccuracy();
+//            System.out.println("Tuning accuracy: "+tunningAccuracy);
+//            double testingAccuracy = neuralNet.testAccuracy();
+//            System.out.println("Testing accuracy: "+testingAccuracy);
+//            System.out.println();
+//        }
 
-            double learningAccuracy = neuralNet.trainOneEpoch();
-            System.out.println("Learning accuracy: "+learningAccuracy);
-            double tunningAccuracy = neuralNet.tuneAccuracy();
-            System.out.println("Tuning accuracy: "+tunningAccuracy);
-            double testingAccuracy = neuralNet.testAccuracy();
-            System.out.println("Testing accuracy: "+testingAccuracy);
-            System.out.println();
-        }
+        neuralNet.startTrainingWithEarlyStopping(10);
     }
 
 }
