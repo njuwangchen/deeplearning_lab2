@@ -14,7 +14,7 @@ public class NeuralNet {
     List<Instance> testingSet;
 
     public NeuralNet(int inputLayerSize, int outputLayerSize, int hiddenLayersNum, int[] hiddenLayersSizes,
-                     int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate,
+                     int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate, double momentum,
                      List<Instance> trainingSet, List<Instance> tuningSet, List<Instance> testingSet) {
         if (hiddenLayersSizes.length != hiddenLayersNum) {
             System.err.println("Hidden Layers Num doesn't match with the number of sizes");
@@ -26,12 +26,13 @@ public class NeuralNet {
 
         this.hiddenLayers = new ArrayList<HiddenLayer>();
         for (int i=0; i<hiddenLayersNum; ++i) {
-            HiddenLayer hiddenLayer = new HiddenLayer(prevLayer, hiddenLayersSizes[i], ACT_HIDDEN, learning_rate);
+            HiddenLayer hiddenLayer = new HiddenLayer(prevLayer, hiddenLayersSizes[i],
+                    ACT_HIDDEN, learning_rate, momentum);
             prevLayer = hiddenLayer;
             this.hiddenLayers.add(hiddenLayer);
         }
 
-        this.outputLayer = new OutputLayer(prevLayer, outputLayerSize, ACT_OUTPUT, learning_rate);
+        this.outputLayer = new OutputLayer(prevLayer, outputLayerSize, ACT_OUTPUT, learning_rate, momentum);
 
         this.trainingSet = trainingSet;
         this.tuningSet = tuningSet;
@@ -53,8 +54,9 @@ public class NeuralNet {
         List<Instance> trainingList = new ArrayList<Instance>();
         trainingList.add(instance);
 
-        NeuralNet nn = new NeuralNet(3, 2, 1, new int[]{3}, Layer.ACT_RELU, Layer.ACT_SIGMOID,
-                0.1, trainingList, null, null);
+        NeuralNet nn = new NeuralNet(3, 2, 1, new int[]{3},
+                Layer.ACT_RELU, Layer.ACT_SIGMOID,
+                0.1, 0.2, trainingList, null, null);
 
         for (int i=0; i<50; ++i)
             nn.trainOneInstance(instance);

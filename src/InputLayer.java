@@ -16,6 +16,7 @@ public class InputLayer extends Layer {
         this.output_size = this.input_size;
 
         this.weightMat = null;
+        this.lastDw = null;
         this.gradMat = null;
 
         this.weightedSum = null;

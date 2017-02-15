@@ -6,10 +6,12 @@ public abstract class Layer implements ILayer{
     int output_size;
     Matrix weightMat;
     Matrix gradMat;
+    Matrix lastDw;
     Vector weightedSum;
     Vector activationOutput;
     int ACT_FLAG;
     double learning_rate;
+    double momentum;
 
     Layer prevLayer;
     Layer nextLayer;

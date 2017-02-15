@@ -5,7 +5,7 @@ public class HiddenLayer extends Layer {
 
     private final static boolean debug = false;
 
-    public HiddenLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate) {
+    public HiddenLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate, double momentum) {
         this.prevLayer = prev;
         this.prevLayer.nextLayer = this;
         this.nextLayer = null;
@@ -14,6 +14,7 @@ public class HiddenLayer extends Layer {
         this.output_size = output_size;
 
         this.weightMat = new Matrix(this.input_size, this.output_size, Matrix.INITIALIZE_RANDOM);
+        this.lastDw = new Matrix(this.input_size, this.output_size, Matrix.INITIALIZE_ZERO);
         this.gradMat = null;
 
         this.weightedSum = null;
@@ -21,6 +22,7 @@ public class HiddenLayer extends Layer {
 
         this.ACT_FLAG = ACT_FLAG;
         this.learning_rate = learning_rate;
+        this.momentum = momentum;
     }
 
     @Override
@@ -120,6 +122,10 @@ public class HiddenLayer extends Layer {
             System.out.println(delta);
         }
         this.weightMat = this.weightMat.matAdd(delta);
+
+        // momentum
+        this.weightMat = this.weightMat.matAdd(this.lastDw.matScalarMul(this.momentum));
+        this.lastDw = delta;
     }
 
     @Override
