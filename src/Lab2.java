@@ -4,8 +4,15 @@
 public class Lab2 {
 
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Usage: Lab2 Filename");
+            System.exit(1);
+        }
+
+        String fileName = args[0];
+
         DataParser dp = new DataParser();
-        dp.parseFile("data/protein-secondary-structure.txt");
+        dp.parseFile(fileName);
 
         NeuralNet neuralNet = new NeuralNet(dp.data_feature_size * dp.feature_value_num,
                 dp.data_label_size, 1, new int[]{10},
