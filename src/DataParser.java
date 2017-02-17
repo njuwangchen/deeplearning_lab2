@@ -13,6 +13,8 @@ public class DataParser {
     List<Instance> tuningSet;
     List<Instance> testingSet;
 
+    Map<Integer, String> reverseLabelMap;
+
     int data_feature_size;
     int data_label_size;
     int feature_value_num;
@@ -23,6 +25,8 @@ public class DataParser {
         this.trainingSet = new ArrayList<Instance>();
         this.tuningSet = new ArrayList<Instance>();
         this.testingSet = new ArrayList<Instance>();
+
+        this.reverseLabelMap = new HashMap<Integer, String>();
 
         this.data_feature_size = 17;
         this.data_label_size = 3;
@@ -91,6 +95,7 @@ public class DataParser {
                 aminoSequenceInProtein.offer(aminoAcidMap.get(amino));
                 if (!labelMap.containsKey(label)) {
                     labelMap.put(label, labelMap.size());
+                    this.reverseLabelMap.put(reverseLabelMap.size(), label);
                 }
                 labelQueue.offer(label);
             }
@@ -98,12 +103,6 @@ public class DataParser {
 
         makeInstanceFromPreviousSequence(aminoAcidMap, labelMap,
                 aminoSequenceInProtein, slidingWindow, labelQueue, countOfProtein);
-
-        System.out.println(this.instanceList.size());
-        System.out.println(countOfProtein);
-        System.out.println(this.trainingSet.size());
-        System.out.println(this.tuningSet.size());
-        System.out.println(this.testingSet.size());
     }
 
     private void makeInstanceFromPreviousSequence(Map<String, Double> aminoAcidMap, Map<String, Integer> labelMap,

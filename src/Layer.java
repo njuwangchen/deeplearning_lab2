@@ -12,6 +12,7 @@ public abstract class Layer implements ILayer{
     int ACT_FLAG;
     double learning_rate;
     double momentum;
+    double weight_decay;
 
     Layer prevLayer;
     Layer nextLayer;

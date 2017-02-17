@@ -23,7 +23,9 @@ public class InputLayer extends Layer {
         this.activationOutput = null;
 
         this.ACT_FLAG = Layer.ACT_LINEAR;
-        this.learning_rate = 0;
+        this.learning_rate = 0.0;
+        this.momentum = 0.0;
+        this.weight_decay = 0.0;
     }
 
     public void feedInput(Vector inputFeature) {

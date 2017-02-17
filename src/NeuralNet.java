@@ -6,6 +6,7 @@ import java.util.*;
 public class NeuralNet {
 
     private final static boolean debug = false;
+    private final static boolean output_label = false;
 
     InputLayer inputLayer;
     List<HiddenLayer> hiddenLayers;
@@ -15,9 +16,12 @@ public class NeuralNet {
     List<Instance> tuningSet;
     List<Instance> testingSet;
 
+    Map<Integer, String> reverseLabelMap;
+
     public NeuralNet(int inputLayerSize, int outputLayerSize, int hiddenLayersNum, int[] hiddenLayersSizes,
-                     int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate, double momentum,
-                     List<Instance> trainingSet, List<Instance> tuningSet, List<Instance> testingSet) {
+                     int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate, double momentum, double weight_decay,
+                     List<Instance> trainingSet, List<Instance> tuningSet, List<Instance> testingSet,
+                     Map<Integer, String> reverseLabelMap) {
         if (hiddenLayersSizes.length != hiddenLayersNum) {
             System.err.println("Hidden Layers Num doesn't match with the number of sizes");
             System.exit(1);
@@ -29,16 +33,19 @@ public class NeuralNet {
         this.hiddenLayers = new ArrayList<HiddenLayer>();
         for (int i=0; i<hiddenLayersNum; ++i) {
             HiddenLayer hiddenLayer = new HiddenLayer(prevLayer, hiddenLayersSizes[i],
-                    ACT_HIDDEN, learning_rate, momentum);
+                    ACT_HIDDEN, learning_rate, momentum, weight_decay);
             prevLayer = hiddenLayer;
             this.hiddenLayers.add(hiddenLayer);
         }
 
-        this.outputLayer = new OutputLayer(prevLayer, outputLayerSize, ACT_OUTPUT, learning_rate, momentum);
+        this.outputLayer = new OutputLayer(prevLayer, outputLayerSize, ACT_OUTPUT,
+                learning_rate, momentum, weight_decay);
 
         this.trainingSet = trainingSet;
         this.tuningSet = tuningSet;
         this.testingSet = testingSet;
+
+        this.reverseLabelMap = reverseLabelMap;
     }
 
     public static void main(String[] args) {
@@ -52,13 +59,17 @@ public class NeuralNet {
         labelMap.put("a", 0);
         labelMap.put("b", 1);
 
+        Map<Integer, String> reverse = new HashMap<Integer, String>();
+        reverse.put(0, "a");
+        reverse.put(1, "b");
+
         Instance instance = new Instance(features, 3, label, labelMap);
         List<Instance> trainingList = new ArrayList<Instance>();
         trainingList.add(instance);
 
         NeuralNet nn = new NeuralNet(3, 2, 1, new int[]{3},
                 Layer.ACT_RELU, Layer.ACT_SIGMOID,
-                0.1, 0.2, trainingList, null, null);
+                0.01, 0.9, 0.0, trainingList, null, null, reverse);
 
         for (int i=0; i<50; ++i)
             nn.trainOneInstance(instance);
@@ -86,14 +97,20 @@ public class NeuralNet {
         for (Instance instance: this.testingSet) {
             if (testOneInstance(instance)) ++count;
 
-            if (debug) {
-                Vector v = new Vector(3, Matrix.INITIALIZE_ZERO);
-                v.data[0][0] = 1.0;
-                if (!outputLayer.finalOutput.equals(v)) {
-                    System.out.println("Not output -");
+            if (output_label) {
+                int outInt = 0;
+                for (int i = 0; i < outputLayer.finalOutput.dimension; ++i) {
+                    if (outputLayer.finalOutput.getElementAt(i) == 1) {
+                        outInt = i;
+                        break;
+                    }
                 }
+                String outLabel = reverseLabelMap.get(outInt);
+                System.out.println(outLabel);
             }
+
         }
+
         return (double)count/this.testingSet.size();
     }
 
@@ -113,37 +130,32 @@ public class NeuralNet {
     public void startTrainingWithEarlyStopping(int stepLimit) {
         double highestTuningAccuracy = 0.0;
         double testingAccuracy = 0.0;
-        List<Matrix> bestHiddenWeights = new ArrayList<Matrix>();
-        Matrix bestOutputWeights = null;
+        // List<Matrix> bestHiddenWeights = new ArrayList<Matrix>();
+        // Matrix bestOutputWeights = null;
 
         int countOfStep = 0;
 
         while (true) {
             if (countOfStep > stepLimit) {
-                //recover
-//                for (int i=0; i<this.hiddenLayers.size(); ++i) {
-//                    HiddenLayer hiddenLayer = this.hiddenLayers.get(i);
-//                    hiddenLayer.weightMat = bestHiddenWeights.get(i);
-//                }
-//                this.outputLayer.weightMat = bestOutputWeights;
                 break;
             }
             System.out.println("Training accuracy is " + this.trainOneEpoch());
 
             double thisTimeAccuracy = this.tuneAccuracy();
             System.out.println("Tuning accuracy is " + thisTimeAccuracy);
+            double thisTimeTestAccuracy = this.testAccuracy();
+            System.out.println("Testing accuracy is " + thisTimeTestAccuracy);
             System.out.println();
 
             if (thisTimeAccuracy > highestTuningAccuracy) {
-                for (HiddenLayer hiddenLayer: this.hiddenLayers) {
-                    Matrix weights = new Matrix(hiddenLayer.weightMat);
-                    bestHiddenWeights.add(weights);
-                }
+//                for (HiddenLayer hiddenLayer: this.hiddenLayers) {
+//                    Matrix weights = new Matrix(hiddenLayer.weightMat);
+//                    bestHiddenWeights.add(weights);
+//                }
 
-                bestOutputWeights = new Matrix(this.outputLayer.weightMat);
-
+//                bestOutputWeights = new Matrix(this.outputLayer.weightMat);
                 highestTuningAccuracy = thisTimeAccuracy;
-                testingAccuracy = this.testAccuracy();
+                testingAccuracy = thisTimeTestAccuracy;
 
                 countOfStep = 0;
             } else {
@@ -152,7 +164,7 @@ public class NeuralNet {
         }
 
         System.out.println("Highest tuning accuracy is " + highestTuningAccuracy);
-        System.out.println("Testing accuracy is " + testingAccuracy);
+        System.out.println("Final Testing accuracy is " + testingAccuracy);
     }
 
     private void forwardOneInstance(Instance instance) {

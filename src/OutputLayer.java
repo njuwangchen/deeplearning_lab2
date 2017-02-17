@@ -8,7 +8,8 @@ public class OutputLayer extends Layer {
     Vector label;
     Vector finalOutput;
 
-    public OutputLayer(Layer prev, int output_size, int ACT_FLAG, double learning_rate, double momentum) {
+    public OutputLayer(Layer prev, int output_size, int ACT_FLAG,
+                       double learning_rate, double momentum, double weight_decay) {
         this.label = null;
         this.finalOutput = null;
 
@@ -30,6 +31,7 @@ public class OutputLayer extends Layer {
         this.ACT_FLAG = ACT_FLAG;
         this.learning_rate = learning_rate;
         this.momentum = momentum;
+        this.weight_decay = weight_decay;
     }
 
     @Override
@@ -150,6 +152,14 @@ public class OutputLayer extends Layer {
         for (int i=0; i<result.x_dimension; ++i) {
             for (int j=0; j<result.y_dimension; ++j) {
                 result.data[i][j] = (input.data[i][0] * this.gradMat.data[i][j]) * learning_rate;
+            }
+        }
+
+        // weight_decay
+
+        for (int i=0; i<result.x_dimension; ++i) {
+            for (int j=0; j<result.y_dimension; ++j) {
+                result.data[i][j] = (result.data[i][j] - learning_rate * weight_decay * this.weightMat.data[i][j]);
             }
         }
 
