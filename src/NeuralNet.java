@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,6 +20,13 @@ public class NeuralNet {
     List<Instance> testingSet;
 
     Map<Integer, String> reverseLabelMap;
+
+    int act_hidden;
+    int act_output;
+
+    double learning_rate;
+    double momentum;
+    double weight_decay;
 
     public NeuralNet(int inputLayerSize, int outputLayerSize, int hiddenLayersNum, int[] hiddenLayersSizes,
                      int ACT_HIDDEN, int ACT_OUTPUT, double learning_rate, double momentum, double weight_decay,
@@ -46,6 +56,13 @@ public class NeuralNet {
         this.testingSet = testingSet;
 
         this.reverseLabelMap = reverseLabelMap;
+
+        this.act_hidden = ACT_HIDDEN;
+        this.act_output = ACT_OUTPUT;
+
+        this.learning_rate = learning_rate;
+        this.momentum = momentum;
+        this.weight_decay = weight_decay;
     }
 
     public static void main(String[] args) {
@@ -128,43 +145,81 @@ public class NeuralNet {
     }
 
     public void startTrainingWithEarlyStopping(int stepLimit) {
-        double highestTuningAccuracy = 0.0;
-        double testingAccuracy = 0.0;
-        // List<Matrix> bestHiddenWeights = new ArrayList<Matrix>();
-        // Matrix bestOutputWeights = null;
 
-        int countOfStep = 0;
+        String filename = String.format("python/data/"+
+                this.hiddenLayers.get(0).output_size + "_" + "%.2f" + "_"+
+                "%.2f"+"_"+"%.2f"+"_"+
+                (this.act_hidden == Layer.ACT_SIGMOID ? "Sigmoid" : "RELU"),
+                this.learning_rate, this.momentum, this.weight_decay);
 
-        while (true) {
-            if (countOfStep > stepLimit) {
-                break;
+        File output = new File(filename);
+
+        FileWriter fileWriter = null;
+
+        try {
+
+            fileWriter = new FileWriter(output);
+
+            double highestTuningAccuracy = 0.0;
+            double testingAccuracy = 0.0;
+            // List<Matrix> bestHiddenWeights = new ArrayList<Matrix>();
+            // Matrix bestOutputWeights = null;
+
+            int countOfStep = 0;
+
+            while (true) {
+                if (countOfStep > stepLimit) {
+                    break;
+                }
+                String train_str = "Training accuracy is " + this.trainOneEpoch() + "\n";
+                System.out.print(train_str);
+                fileWriter.write(train_str);
+
+                double thisTimeAccuracy = this.tuneAccuracy();
+                String tune_str = "Tuning accuracy is " + thisTimeAccuracy + "\n";
+                System.out.print(tune_str);
+                fileWriter.write(tune_str);
+
+                double thisTimeTestAccuracy = this.testAccuracy();
+                String test_str = "Testing accuracy is " + thisTimeTestAccuracy + "\n";
+                System.out.print(test_str);
+                fileWriter.write(test_str);
+
+                System.out.println();
+                fileWriter.write("\n");
+
+                fileWriter.flush();
+
+                if (thisTimeAccuracy > highestTuningAccuracy) {
+                    //                for (HiddenLayer hiddenLayer: this.hiddenLayers) {
+                    //                    Matrix weights = new Matrix(hiddenLayer.weightMat);
+                    //                    bestHiddenWeights.add(weights);
+                    //                }
+
+                    //                bestOutputWeights = new Matrix(this.outputLayer.weightMat);
+                    highestTuningAccuracy = thisTimeAccuracy;
+                    testingAccuracy = thisTimeTestAccuracy;
+
+                    countOfStep = 0;
+                } else {
+                    ++countOfStep;
+                }
             }
-            System.out.println("Training accuracy is " + this.trainOneEpoch());
 
-            double thisTimeAccuracy = this.tuneAccuracy();
-            System.out.println("Tuning accuracy is " + thisTimeAccuracy);
-            double thisTimeTestAccuracy = this.testAccuracy();
-            System.out.println("Testing accuracy is " + thisTimeTestAccuracy);
-            System.out.println();
+            String high_str = "Highest tuning accuracy is " + highestTuningAccuracy + "\n";
+            System.out.print(high_str);
+            fileWriter.write(high_str);
 
-            if (thisTimeAccuracy > highestTuningAccuracy) {
-//                for (HiddenLayer hiddenLayer: this.hiddenLayers) {
-//                    Matrix weights = new Matrix(hiddenLayer.weightMat);
-//                    bestHiddenWeights.add(weights);
-//                }
+            String final_str = "Final Testing accuracy is " + testingAccuracy + "\n";
+            System.out.print(final_str);
+            fileWriter.write(final_str);
 
-//                bestOutputWeights = new Matrix(this.outputLayer.weightMat);
-                highestTuningAccuracy = thisTimeAccuracy;
-                testingAccuracy = thisTimeTestAccuracy;
+            fileWriter.flush();
+            fileWriter.close();
 
-                countOfStep = 0;
-            } else {
-                ++countOfStep;
-            }
+        }catch (IOException ex) {
+            ex.printStackTrace();
         }
-
-        System.out.println("Highest tuning accuracy is " + highestTuningAccuracy);
-        System.out.println("Final Testing accuracy is " + testingAccuracy);
     }
 
     private void forwardOneInstance(Instance instance) {

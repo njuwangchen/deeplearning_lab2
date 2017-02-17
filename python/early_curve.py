@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+import sys
 
 def plot_early_curve(filename):
     training_accuracy = []
@@ -27,6 +28,11 @@ def plot_early_curve(filename):
 
     plt.xlabel("epoch num")
     plt.ylabel("accuracy")
+
+
+    path_arr = filename.rsplit("/", 2)
+    filename = path_arr[-1]
+    folder_path = path_arr[-3]
 
     title_arr = filename.split('_')
     hidden_units = title_arr[0]
@@ -88,7 +94,11 @@ def plot_early_curve(filename):
     if back == 'TkAgg':
         mng.resize(*mng.window.maxsize())
 
-    plt.savefig(filename+".png")
+    plt.savefig(folder_path+"/figure/"+filename+".png")
 
 if __name__ == '__main__':
-    plot_early_curve("10_0.01_0.9_0_sigmoid")
+    if len(sys.argv) != 2:
+        print "Usage: early_curve.py filename"
+        sys.exit()
+    filename = sys.argv[1]
+    plot_early_curve(filename)
