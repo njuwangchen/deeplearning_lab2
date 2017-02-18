@@ -1,0 +1,122 @@
+Training accuracy is 0.5664659564613247
+Tuning accuracy is 0.5749058243987251
+Testing accuracy is 0.5468801045409997
+
+Training accuracy is 0.6182094885198174
+Tuning accuracy is 0.6227180527383367
+Testing accuracy is 0.5949036262659262
+
+Training accuracy is 0.6399788261761398
+Tuning accuracy is 0.6253259924659519
+Testing accuracy is 0.6073178699771317
+
+Training accuracy is 0.6556606894726394
+Tuning accuracy is 0.6340191248913358
+Testing accuracy is 0.6082979418490689
+
+Training accuracy is 0.6663137696023291
+Tuning accuracy is 0.62996232975949
+Testing accuracy is 0.6135249918327343
+
+Training accuracy is 0.6761066631376961
+Tuning accuracy is 0.6215589684149522
+Testing accuracy is 0.6082979418490689
+
+Training accuracy is 0.6840468470852908
+Tuning accuracy is 0.6383656911040279
+Testing accuracy is 0.608624632473048
+
+Training accuracy is 0.6956262820088666
+Tuning accuracy is 0.6331498116487975
+Testing accuracy is 0.608624632473048
+
+Training accuracy is 0.6990670283861576
+Tuning accuracy is 0.6412634019124891
+Testing accuracy is 0.615485135576609
+
+Training accuracy is 0.7060146893403031
+Tuning accuracy is 0.6383656911040279
+Testing accuracy is 0.6128716105847762
+
+Training accuracy is 0.7148812280817839
+Tuning accuracy is 0.634308895972182
+Testing accuracy is 0.6040509637373407
+
+Training accuracy is 0.718785151856018
+Tuning accuracy is 0.6398145465082585
+Testing accuracy is 0.6076445606011107
+
+Training accuracy is 0.7209025342420433
+Tuning accuracy is 0.6398145465082585
+Testing accuracy is 0.6063377981051944
+
+Training accuracy is 0.7276516905974988
+Tuning accuracy is 0.6403940886699507
+Testing accuracy is 0.6063377981051944
+
+Training accuracy is 0.7339376695560114
+Tuning accuracy is 0.6412634019124891
+Testing accuracy is 0.6138516824567135
+
+Training accuracy is 0.7376430887315556
+Tuning accuracy is 0.6348884381338742
+Testing accuracy is 0.6050310356092781
+
+Training accuracy is 0.7421425263018593
+Tuning accuracy is 0.6331498116487975
+Testing accuracy is 0.6004573668735708
+
+Training accuracy is 0.7430027128961821
+Tuning accuracy is 0.6340191248913358
+Testing accuracy is 0.6040509637373407
+
+Training accuracy is 0.7467743002712897
+Tuning accuracy is 0.6424224862358736
+Testing accuracy is 0.6082979418490689
+
+Training accuracy is 0.7493548600542579
+Tuning accuracy is 0.6377861489423355
+Testing accuracy is 0.6066644887291734
+
+Training accuracy is 0.7516707470389731
+Tuning accuracy is 0.6290930165169516
+Testing accuracy is 0.6076445606011107
+
+Training accuracy is 0.7554423344140806
+Tuning accuracy is 0.6369168356997972
+Testing accuracy is 0.6053577262332571
+
+Training accuracy is 0.7579567259974856
+Tuning accuracy is 0.6357577513764127
+Testing accuracy is 0.6007840574975498
+
+Training accuracy is 0.7610004631773969
+Tuning accuracy is 0.6290930165169516
+Testing accuracy is 0.6102580855929435
+
+Training accuracy is 0.7658969099450804
+Tuning accuracy is 0.6369168356997972
+Testing accuracy is 0.6131983012087553
+
+Training accuracy is 0.7699993383180044
+Tuning accuracy is 0.6288032454361054
+Testing accuracy is 0.6047043449852989
+
+Training accuracy is 0.7715873751075233
+Tuning accuracy is 0.6244566792234135
+Testing accuracy is 0.6069911793531526
+
+Training accuracy is 0.7734400846952955
+Tuning accuracy is 0.6273543900318748
+Testing accuracy is 0.6063377981051944
+
+Training accuracy is 0.7737047574935486
+Tuning accuracy is 0.6293827875977978
+Testing accuracy is 0.6105847762169225
+
+Training accuracy is 0.7795275590551181
+Tuning accuracy is 0.6308316430020284
+Testing accuracy is 0.6128716105847762
+
+Highest tuning accuracy is 0.6424224862358736
+Final Testing accuracy is 0.6082979418490689
